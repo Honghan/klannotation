@@ -1,0 +1,27 @@
+version: '3'
+services:
+  klannotation:
+    image: python:3
+    restart: always
+    working_dir: /working/klannotation
+    command: python webserver.py
+    volumes:
+      - klannotation-repo:/working/klannotation
+      - annotation-data:/working/klannotation/data
+    ports:
+      - "8000:8000"
+
+volumes:
+  annotation-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: PATH_TO_ANNOTATION_FOLDER
+      o: bind
+
+  klannotation-repo:
+    driver: local
+    driver_opts:
+      type: none
+      device: PATH_TO_KLANNOTATION_REPO
+      o: bind
