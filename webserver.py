@@ -80,6 +80,7 @@ class S(SimpleHTTPRequestHandler):
         self.wfile.write(s_response.encode("utf8"))
 
     def do_GET(self):
+        print('request [%s]' % self.path)
         if self.path.startswith(CONST_VIS_PREFIX):
             super().do_GET()
         elif self.path.startswith(CONST_API_PREFIX):
@@ -104,8 +105,9 @@ class S(SimpleHTTPRequestHandler):
         self.wfile.write(self._html("POST!"))
 
 
-def run(server_class=HTTPServer, addr="localhost", port=8000):
+def run(server_class=HTTPServer, addr="", port=8000):
     server_address = (addr, port)
+    print('listen to [%s]' % addr)
     httpd = server_class(server_address, S)
 
     print(f"Starting httpd server on {addr}:{port}")
@@ -118,7 +120,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-l",
         "--listen",
-        default="localhost",
+        default="",
         help="Specify the IP address on which the server listens",
     )
     parser.add_argument(

@@ -34,7 +34,7 @@ class FileBasedDocAnn(DocAnn):
     def get_doc_content(self, doc_id):
         return FileBasedDocAnn.read_text_file(join(self._doc_folder, doc_id))
 
-    def get_doc_ann(self, doc_id, ptn='%s.json'):
+    def get_doc_ann(self, doc_id, ptn='se_ann_%s.json'):
         return FileBasedDocAnn.load_json(join(self._ann_folder, ptn % doc_id[:doc_id.rfind('.')]))
 
     @staticmethod
