@@ -51,13 +51,26 @@
             "e": ann['end'],
             "t": ann.sty,
             "label": ann.pref,
-            "negation": ann.negation,
+            "negation": isNegation(ann),
             "experiencer": ann.experiencer,
             "temporality": ann.temporality,
-            "hypothetical": ((ann.temporality === "hypothetical" ||
-                ann.ruled_by.includes("hypothetical_filters.json") ? "hypo" : "")),
+            "hypothetical": isHypothetical(ann),
             "category": "umls"
         }
+    }
+
+    function isNegation(ann){
+        if (ann.negation === "Negated" || ann.ruled_by.includes("negation_filters.json"))
+            return "Negated";
+        else
+            return "Affirmed";
+    }
+
+    function isHypothetical(ann){
+        if (ann.temporality === "hypothetical" || ann.ruled_by.includes("hypothetical_filters.json"))
+            return "hypo";
+        else
+            return "";
     }
 
     function formatPhenotypeAnn(ann, index){
@@ -68,10 +81,10 @@
             "e": ann['end'],
             "t": ann.minor_type,
             "label": ann.str,
-            "negation": ann.negation,
+            "negation": isNegation(ann),
             "experiencer": ann.experiencer,
             "temporality": ann.temporality,
-            "hypothetical": ann.temporality,
+            "hypothetical": isHypothetical(ann),
             "category": "customised"
         }
     }
