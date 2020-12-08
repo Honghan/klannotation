@@ -2,7 +2,7 @@
 
 body {
     font-family: 'Josefin Sans', "Times New Roman";
-    font-size: 1.6em;
+    font-size: 1.3em;
     padding: 1em;
     /*background-size: 1em 1em;*/
     /*background-image: radial-gradient(circle, rgba(0, 50, 255, 0.2) 1px, rgba(0, 0, 0, 0) 2px);*/
@@ -38,6 +38,7 @@ body {
 
 .docContent{
     line-height: 50px;
+    white-space: pre-line;
 }
 
 .ann{
@@ -53,10 +54,22 @@ body {
 
 mark{
     cursor: pointer;
+    padding: 3px;
 }
 
 mark.Negated{
-    background-color: #a5dc86;
+    text-decoration: line-through;
+}
+
+mark.customised{
+    background-color: #ff4e64;
+}
+
+.legend{
+    margin: 30px;
+    border-bottom: dotted 1px #87adbd;
+    padding: 6px;
+    font-size: 60%;
 }
 
 .docList a{
@@ -75,12 +88,12 @@ mark.Negated{
 }
 
 #leftPanel{
-    width: 20%;
+    width: 40%;
     border-right: solid 1px #eeeeee;
 }
 
 #rightPanel{
-    width: 70%;
+    width: 50%;
     margin-left: 30px;
 }
 

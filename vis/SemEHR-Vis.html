@@ -6,6 +6,8 @@
 </head>
 <link type="text/css" href="css/text-render.css" rel="stylesheet"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
 
 <script src="./js/api.js"></script>
 <script src="./js/vis.js"></script>
@@ -13,12 +15,13 @@
 <div class="semehr">KLAnnotation | SemEHR</div>
 <div class="main">
     <div  id="leftPanel">
-        <div class="title">List</div>
+        <div class="title">Document List</div>
         <div class="docList">
         </div>
     </div>
     <div id="rightPanel">
-        <div class="title">Content</div>
+        <div class="title">Annotated Document Content</div>
+        <div class="legend">Legend: <mark class="">UMLS concepts</mark> <mark class="Negated">negated</mark> <mark class="customised">customised dictionary terms</mark></div>
         <div class="docContent">
         </div>
     </div>
