@@ -65,11 +65,15 @@ mark.customised{
     background-color: #ff4e64;
 }
 
+mark.hypo{
+    background-color: #ccc79d;
+}
+
 .legend{
     margin: 30px;
     border-bottom: dotted 1px #87adbd;
     padding: 6px;
-    font-size: 60%;
+    font-size: 70%;
 }
 
 .docList a{

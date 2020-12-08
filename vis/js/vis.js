@@ -54,7 +54,8 @@
             "negation": ann.negation,
             "experiencer": ann.experiencer,
             "temporality": ann.temporality,
-            "hypothetical": ann.temporality,
+            "hypothetical": ((ann.temporality === "hypothetical" ||
+                ann.ruled_by.includes("hypothetical_filters.json") ? "hypo" : "")),
             "category": "umls"
         }
     }
