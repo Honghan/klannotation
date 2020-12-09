@@ -50,6 +50,7 @@ class DocAnn(object):
         for ann in anns:
             if ann['cui'] in umls2term:
                 ann['mapped'] = umls2term[ann['cui']]
+                mapped.append(ann)
         doc_anns['annotations'] = mapped
         doc_anns['mapping_name'] = map_name
         return doc_anns
