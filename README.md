@@ -10,3 +10,6 @@ A lightweight annotation visualisation tool
     ```bash
     docker-compose -f klannotation-compose.yml up -d
     ```
+
+## RESTful API call
+Documentation: [here](https://github.com/Honghan/klannotation/wiki/API-Usage)
