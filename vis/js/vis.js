@@ -191,20 +191,21 @@
         $('.legend mark').click(function (){
             if ($(this).hasClass("selected")){
                 $(this).removeClass("selected");
-                $('.docContent .' + $(this).attr('class')).addClass("clear");
+                // $('.docContent .' + $(this).attr('class')).addClass("clear");
             }else{
-                $('.docContent .' + $(this).attr('class')).removeClass("clear");
+                // $('.docContent .' + $(this).attr('class')).removeClass("clear");
                 $(this).addClass("selected");
             }
+            showByLegend();
         });
     }
 
     function showByLegend(){
         $('.legend mark').each(function (){
+            const cls = $(this).attr('class').replaceAll("selected", "");
             if ($(this).hasClass("selected")){
-                $('.docContent .' +  $(this).attr('class')).removeClass("clear");
+                $('.docContent .' +  cls).removeClass("clear");
             }else{
-                const cls = $(this).attr('class').replaceAll("selected", "");
                 $('.docContent .' + cls).addClass("clear");
             }
         });
