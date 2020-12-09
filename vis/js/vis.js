@@ -1,5 +1,29 @@
 (function($){
     let _curDoc = null;
+    let _curMapping = null;
+
+    function getAvailableMappings(){
+        qbb.inf.getMappings(function (ss){
+            console.log("mappings:-", ss);
+            let s = "mappings:";
+            for (const m of ss){
+                s += "<span name='" + m + "'>" + m + "</span>";
+            }
+            $(".mappings").html(s);
+
+            $(".mappings span").click(function (){
+                if ($(this).hasClass("selected")){
+                    $(".mappings span").removeClass("selected");
+                    _curMapping = null;
+                }else{
+                    _curMapping = $(this).attr("name");
+                    $(".mappings span").addClass("selected");
+                }
+                getDocDetail(_curDoc);
+            });
+        });
+    }
+
     function getAllDocIds(){
         qbb.inf.getDocList(function (docs){
             let s = "";
@@ -20,29 +44,38 @@
         });
     }
 
+    function processDocDetails(ss){
+        $('.docContent').html(highlight(ss["anns"], ss["content"], false))
+        $('mark').mouseover(function (){
+            $('.ann').hide();
+            $(this).find('.ann').each(function (){
+                let ppos = $(this).parent().position();
+                $(this).css("left", ppos.left);
+                $(this).css("top", ppos.top - 36);
+                $(this).show();
+            });
+
+        });
+        $('mark').mouseout(function (){
+            $(this).find('.ann').hide();
+        })
+
+        showByLegend();
+    }
+
     function getDocDetail(docId){
         $('a.selected').removeClass('selected');
         $('.docContent').html('loading ' + docId + '...')
         _curDoc = docId;
         $('#' + _curDoc.replaceAll(".", "_")).addClass('selected');
-        qbb.inf.getDocDetail(_curDoc, function (ss){
-            $('.docContent').html(highlight(ss["anns"], ss["content"], false))
-            $('mark').mouseover(function (){
-                $('.ann').hide();
-                $(this).find('.ann').each(function (){
-                    let ppos = $(this).parent().position();
-                    $(this).css("left", ppos.left);
-                    $(this).css("top", ppos.top - 36);
-                    $(this).show();
-                });
-
+        if (_curMapping === null)
+            qbb.inf.getDocDetail(_curDoc, function (ss){
+                processDocDetails(ss);
             });
-            $('mark').mouseout(function (){
-                $(this).find('.ann').hide();
-            })
-
-            showByLegend();
-        })
+        else
+            qbb.inf.getDocDetailMapping(_curDoc, _curMapping, function (ss){
+                processDocDetails(ss);
+            });
     }
 
     function formatAnnotation(ann, index){
@@ -63,6 +96,8 @@
     }
 
     function isAbbrev(ann){
+        if (!ann['ruled_by'])
+            return "";
         if (ann.ruled_by.includes("s_abbr.json")){
             return "abbrev";
         }else
@@ -70,6 +105,8 @@
     }
 
     function isNegation(ann){
+        if (!ann['ruled_by'])
+            return "";
         if (ann.negation === "Negated" || ann.ruled_by.includes("negation_filters.json"))
             return "Negated";
         else
@@ -77,6 +114,8 @@
     }
 
     function isHypothetical(ann){
+        if (!ann['ruled_by'])
+            return "";
         if (ann.temporality === "hypothetical" || ann.ruled_by.includes("hypothetical_filters.json"))
             return "hypo";
         else
@@ -212,6 +251,7 @@
     }
 
     $(document).ready(function(){
+        getAvailableMappings();
         getAllDocIds();
         toggleAnn();
     })

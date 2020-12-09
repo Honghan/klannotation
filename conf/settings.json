@@ -1,0 +1,5 @@
+{
+  "mappings": [
+    {"name":  "HPO mapping", "file": "./conf/hpo-umls-mapping.json"}
+  ]
+}

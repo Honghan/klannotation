@@ -18,6 +18,16 @@ if (typeof qbb == "undefined"){
 				qbb.inf.callAPI(sendObject, searchCB);
 			},
 
+			getDocDetailMapping: function(docId, mapping, searchCB){
+				var sendObject= ["doc_content_mapping", docId, mapping];
+				qbb.inf.callAPI(sendObject, searchCB);
+			},
+
+			getMappings: function(searchCB){
+				var sendObject= ["mappings"];
+				qbb.inf.callAPI(sendObject, searchCB);
+			},
+
 			callAPI: function(sendObject, cb){
 				qbb.inf.ajax.doGet(sendObject, function(s){
 					var ret = s;

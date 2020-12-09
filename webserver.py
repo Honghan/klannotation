@@ -1,8 +1,8 @@
 import argparse
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import json
-from urllib.parse import urlparse, parse_qs
-from webapi import FileBasedDocAnn
+from urllib.parse import urlparse, parse_qs, unquote
+from webapi import FileBasedDocAnn, load_json_data
 import re
 
 CONST_VIS_PREFIX = '/vis/'
@@ -20,6 +20,8 @@ class APIMapper(object):
             func = m.group(1)
             if func == 'docs':
                 return self._inst.get_doc_list()
+            elif func == 'mappings':
+                return self._inst.get_available_mappings()
             elif func in ['doc_content', 'doc_ann', 'doc_detail']:
                 m2 = re.search('/api/([^/]{1,255})/([^/]{1,255})/', api_call)
                 if m2:
@@ -31,6 +33,10 @@ class APIMapper(object):
                         return {"anns": self._inst.get_doc_ann(m2.group(2)),
                                 "content": self._inst.get_doc_content(m2.group(2))}
                 raise Exception('doc id not found in [%s]' % api_call)
+            elif func in ['doc_content_mapping']:
+                m3 = re.search('/api/([^/]{1,255})/([^/]{1,255})/([^/]{1,255})/', api_call)
+                return {"content": self._inst.get_doc_content(m3.group(2)),
+                        "anns": self._inst.get_doc_ann_by_mapping(m3.group(2), unquote(m3.group(3)))}
         raise Exception('path [%s] not valid' % api_call)
 
     @staticmethod
@@ -41,8 +47,11 @@ class APIMapper(object):
         else:
             docs_path = './data/input_docs'
             ann_path = './data/semehr_results'
-            _api_mapper = APIMapper(FileBasedDocAnn(doc_folder=docs_path,
-                                                    ann_folder=ann_path))
+            settings = load_json_data('./conf/settings.json')
+            doc_ann_inst = FileBasedDocAnn(doc_folder=docs_path,
+                                           ann_folder=ann_path)
+            doc_ann_inst.load_mappings(settings['mappings'])
+            _api_mapper = APIMapper(doc_ann_inst)
         return _api_mapper
 
 

@@ -122,3 +122,14 @@ mark.clear{
     font-weight: bold;
     margin: 20px 0 50px 0;
 }
+
+.mappings span{
+    background-color: #87adbd;
+    padding: 3px;
+    margin-left: 6px;
+    cursor: pointer;
+}
+
+.mappings span.selected{
+    box-shadow: 3px 3px #888888;
+}
