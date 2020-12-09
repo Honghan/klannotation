@@ -6,7 +6,7 @@ if (typeof qbb == "undefined"){
 	if(typeof qbb.inf == "undefined") {
 
 		qbb.inf = {
-			service_url: "http://localhost:8000/api",
+			service_url: "/api",
 
 			getDocList: function(searchCB){
 				var sendObject= ["docs"];
