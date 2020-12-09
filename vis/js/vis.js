@@ -40,6 +40,8 @@
             $('mark').mouseout(function (){
                 $(this).find('.ann').hide();
             })
+
+            showByLegend();
         })
     }
 
@@ -55,8 +57,16 @@
             "experiencer": ann.experiencer,
             "temporality": ann.temporality,
             "hypothetical": isHypothetical(ann),
+            "abbrev": isAbbrev(ann),
             "category": "umls"
         }
+    }
+
+    function isAbbrev(ann){
+        if (ann.ruled_by.includes("s_abbr.json")){
+            return "abbrev";
+        }else
+            return "";
     }
 
     function isNegation(ann){
@@ -85,6 +95,7 @@
             "experiencer": ann.experiencer,
             "temporality": ann.temporality,
             "hypothetical": isHypothetical(ann),
+            "abbrev": isAbbrev(ann),
             "category": "customised"
         }
     }
@@ -155,7 +166,8 @@
                 new_str += "...";
             for (let idx in hos){
                 const ann = hos[idx];
-                const cls = [ann.category, ann.negation, ann.temporality, ann.hypothetical].join(" ");
+                const cls = ['default', ann.category, ann.negation, ann.temporality,
+                    ann.hypothetical, ann.abbrev].join(" ");
 
                 new_str += text.substring(prev_pos, ann["s"]) +
                     "<mark class='" + cls + "'><span title='" +
@@ -175,8 +187,32 @@
         return new_str;
     }
 
+    function toggleAnn(){
+        $('.legend mark').click(function (){
+            if ($(this).hasClass("selected")){
+                $(this).removeClass("selected");
+                $('.docContent .' + $(this).attr('class')).addClass("clear");
+            }else{
+                $('.docContent .' + $(this).attr('class')).removeClass("clear");
+                $(this).addClass("selected");
+            }
+        });
+    }
+
+    function showByLegend(){
+        $('.legend mark').each(function (){
+            if ($(this).hasClass("selected")){
+                $('.docContent .' +  $(this).attr('class')).removeClass("clear");
+            }else{
+                const cls = $(this).attr('class').replaceAll("selected", "");
+                $('.docContent .' + cls).addClass("clear");
+            }
+        });
+    }
+
     $(document).ready(function(){
         getAllDocIds();
+        toggleAnn();
     })
 
 })(this.jQuery)

@@ -69,11 +69,27 @@ mark.hypo{
     border-bottom: 3px dashed #2980b9;
 }
 
+mark.abbrev{
+    opacity: 0.3;
+}
+
+mark.clear{
+    border-bottom: 0;
+    text-decoration: none;
+    padding: 0;
+    background-color: transparent;
+    opacity: 1;
+}
+
 .legend{
     margin: 30px;
     border-bottom: dotted 1px #87adbd;
-    padding: 6px;
+    padding: 12px;
     font-size: 70%;
+}
+
+.legend mark.selected{
+    box-shadow: 3px 3px #888888;
 }
 
 .docList a{
