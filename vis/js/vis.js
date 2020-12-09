@@ -21,7 +21,7 @@
     }
 
     function getDocDetail(docId){
-        $('.selected').removeClass('selected');
+        $('a.selected').removeClass('selected');
         $('.docContent').html('loading ' + docId + '...')
         _curDoc = docId;
         $('#' + _curDoc.replaceAll(".", "_")).addClass('selected');
