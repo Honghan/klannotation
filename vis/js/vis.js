@@ -1,6 +1,36 @@
 (function($){
     let _curDoc = null;
     let _curMapping = null;
+    let _needPassphrase = false;
+    let _passphrase = null;
+
+    function checkPassphraseNecessary(){
+        qbb.inf.needPassphrase(function (s){
+            if (s){
+                _needPassphrase = true;
+                _passphrase = prompt("This instance needs passphrase, please input it:");
+                checkPhraseAndGO(_passphrase);
+            }else
+                start();
+        }, _passphrase);
+    }
+
+    function start(){
+        getAvailableMappings();
+        getAllDocIds();
+        toggleAnn();
+    }
+
+    function checkPhraseAndGO(phrase){
+        qbb.inf.checkPhrase(phrase, function (ret){
+            if (ret){
+                start();
+            }else{
+                _passphrase = prompt("Passphrase not valid, please input it again:");
+                checkPhraseAndGO(_passphrase);
+            }
+        }, _passphrase)
+    }
 
     function getAvailableMappings(){
         qbb.inf.getMappings(function (ss){
@@ -21,7 +51,7 @@
                 }
                 getDocDetail(_curDoc);
             });
-        });
+        }, _passphrase);
     }
 
     function getAllDocIds(){
@@ -41,7 +71,7 @@
                 "order": [[ 0, "asc" ]]
             });
             getDocDetail(_curDoc);
-        });
+        }, _passphrase);
     }
 
     function processDocDetails(ss){
@@ -71,11 +101,11 @@
         if (_curMapping === null)
             qbb.inf.getDocDetail(_curDoc, function (ss){
                 processDocDetails(ss);
-            });
+            }, _passphrase);
         else
             qbb.inf.getDocDetailMapping(_curDoc, _curMapping, function (ss){
                 processDocDetails(ss);
-            });
+            }, _passphrase);
     }
 
     function formatAnnotation(ann, index){
@@ -251,9 +281,7 @@
     }
 
     $(document).ready(function(){
-        getAvailableMappings();
-        getAllDocIds();
-        toggleAnn();
+        checkPassphraseNecessary();
     })
 
 })(this.jQuery)

@@ -13,22 +13,38 @@ _api_mapper = None
 class APIMapper(object):
     def __init__(self, doc_ann_inst):
         self._inst = doc_ann_inst
+        self._passphrase = None
 
-    def map(self, api_call):
+    def set_passphrase(self, pp):
+        self._passphrase = pp
+
+    def validate_passphrase(self, pp):
+        if self._passphrase is None:
+            return True
+        return self._passphrase == pp
+
+    def map(self, api_call, passphrase=None):
         m = re.search('/api/([^/]{1,255})/', api_call)
         if m:
             func = m.group(1)
+            print('func %s' % func)
+            if func not in ['check_phrase', 'need_passphrase'] and not self.validate_passphrase(passphrase):
+                raise Exception('passphrase needed but not provided or not valid')
             if func == 'docs':
                 return self._inst.get_doc_list()
+            elif func == 'need_passphrase':
+                return self._passphrase is not None
             elif func == 'mappings':
                 return self._inst.get_available_mappings()
-            elif func in ['doc_content', 'doc_ann', 'doc_detail']:
+            elif func in ['doc_content', 'doc_ann', 'doc_detail', 'check_phrase']:
                 m2 = re.search('/api/([^/]{1,255})/([^/]{1,255})/', api_call)
                 if m2:
                     if func == 'doc_content':
                         return self._inst.get_doc_content(m2.group(2))
                     elif func == 'doc_ann':
                         return self._inst.get_doc_ann(m2.group(2))
+                    elif func == 'check_phrase':
+                        return self._passphrase == m2.group(2)
                     else:
                         return {"anns": self._inst.get_doc_ann(m2.group(2)),
                                 "content": self._inst.get_doc_content(m2.group(2))}
@@ -52,6 +68,8 @@ class APIMapper(object):
                                            ann_folder=ann_path)
             doc_ann_inst.load_mappings(settings['mappings'])
             _api_mapper = APIMapper(doc_ann_inst)
+            if 'passphrase' in settings:
+                _api_mapper.set_passphrase(settings['passphrase'])
         return _api_mapper
 
 
@@ -84,6 +102,9 @@ class S(SimpleHTTPRequestHandler):
         self.wfile.write(json.dumps(message).encode("utf8"))
 
     def output_jsonp(self, message, callback_func):
+        if callback_func is None:
+            self.output_json(message)
+            return
         self._set_headers(type='json')
         s_response = '%s(%s)' % (callback_func, json.dumps(message))
         self.wfile.write(s_response.encode("utf8"))
@@ -96,7 +117,10 @@ class S(SimpleHTTPRequestHandler):
             # try:
             parsed = urlparse(self.path)
             qs = parse_qs(parsed.query)
-            self.output_jsonp(APIMapper.get_mapper().map(self.path), qs['callback'][0])
+            self.output_jsonp(APIMapper.get_mapper().map(self.path,
+                                                         passphrase=qs['passphrase'][0]
+                                                         if 'passphrase' in qs else None),
+                              qs['callback'][0] if 'callback' in qs else None)
             # except Exception as err:
             #     print(err)
             #     self._set_headers()

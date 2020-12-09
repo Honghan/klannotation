@@ -8,27 +8,37 @@ if (typeof qbb == "undefined"){
 		qbb.inf = {
 			service_url: "/api",
 
-			getDocList: function(searchCB){
+			getDocList: function(searchCB, passphrase){
 				var sendObject= ["docs"];
-				qbb.inf.callAPI(sendObject, searchCB);
+				qbb.inf.callAPI(sendObject, searchCB, passphrase);
 			},
 
-			getDocDetail: function(docId, searchCB){
+			needPassphrase: function(searchCB, passphrase){
+				var sendObject= ["need_passphrase"];
+				qbb.inf.callAPI(sendObject, searchCB, passphrase);
+			},
+
+			checkPhrase: function(phrase, searchCB, passphrase){
+				var sendObject= ["check_phrase", phrase];
+				qbb.inf.callAPI(sendObject, searchCB, passphrase);
+			},
+
+			getDocDetail: function(docId, searchCB, passphrase){
 				var sendObject= ["doc_detail", docId];
-				qbb.inf.callAPI(sendObject, searchCB);
+				qbb.inf.callAPI(sendObject, searchCB, passphrase);
 			},
 
-			getDocDetailMapping: function(docId, mapping, searchCB){
+			getDocDetailMapping: function(docId, mapping, searchCB, passphrase){
 				var sendObject= ["doc_content_mapping", docId, mapping];
-				qbb.inf.callAPI(sendObject, searchCB);
+				qbb.inf.callAPI(sendObject, searchCB, passphrase);
 			},
 
-			getMappings: function(searchCB){
+			getMappings: function(searchCB, passphrase){
 				var sendObject= ["mappings"];
-				qbb.inf.callAPI(sendObject, searchCB);
+				qbb.inf.callAPI(sendObject, searchCB, passphrase);
 			},
 
-			callAPI: function(sendObject, cb){
+			callAPI: function(sendObject, cb, passphrase){
 				qbb.inf.ajax.doGet(sendObject, function(s){
 					var ret = s;
 					if (ret)
@@ -42,16 +52,18 @@ if (typeof qbb == "undefined"){
 					}
 				}, function(){
 					alert("API call failed.");
-				});
+				}, passphrase);
 			},
 
 			ajax: {
-					doGet:function(sendData,success,error){
+					doGet:function(sendData,success,error, passphrase){
 						var url = qbb.inf.service_url;
 						for (var i=0;i<sendData.length;i++)
 							url += "/" + sendData[i];
 						if (sendData.length > 0)
 							url += "/";
+						if (passphrase)
+							url += "?passphrase=" + passphrase;
 						qbb.inf.ajax.doSend("Get",url,sendData,success,error);
 					},
 					doPost:function(sendData,success,error){
