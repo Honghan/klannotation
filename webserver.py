@@ -36,7 +36,7 @@ class APIMapper(object):
                 return self._passphrase is not None
             elif func == 'mappings':
                 return self._inst.get_available_mappings()
-            elif func in ['doc_content', 'doc_ann', 'doc_detail', 'check_phrase']:
+            elif func in ['doc_content', 'doc_ann', 'doc_detail', 'check_phrase', 'search_docs', 'search_anns']:
                 m2 = re.search('/api/([^/]{1,255})/([^/]{1,255})/', api_call)
                 if m2:
                     if func == 'doc_content':
@@ -45,6 +45,10 @@ class APIMapper(object):
                         return self._inst.get_doc_ann(m2.group(2))
                     elif func == 'check_phrase':
                         return self._passphrase == m2.group(2)
+                    elif func == 'search_doc':
+                        return self._inst.search_docs(unquote(m2.group(2)))
+                    elif func == 'search_anns':
+                        return self._inst.search_anns(unquote(m2.group(2)))
                     else:
                         return {"anns": self._inst.get_doc_ann(m2.group(2)),
                                 "content": self._inst.get_doc_content(m2.group(2))}

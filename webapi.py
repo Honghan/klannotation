@@ -2,6 +2,7 @@ from os import listdir
 from os.path import isfile, join
 import codecs
 import json
+import re
 
 
 def save_json_array(lst, file_path, encoding='utf-8'):
@@ -57,6 +58,32 @@ class DocAnn(object):
 
     def get_available_mappings(self):
         return list(self._mappings.keys())
+
+    def search_docs(self, query):
+        query = '\\b%s\\b' % query
+        matched_docs = []
+        for d in self.get_doc_list():
+            content = self.get_doc_content(d)
+            if re.search(query, content):
+                matched_docs.append(d)
+        return matched_docs
+
+    def search_anns(self, query, map_name=None):
+        matched_docs = []
+        for d in self.get_doc_list():
+            ann_obj = self.get_doc_ann(d) if map_name is None else self.get_doc_ann_by_mapping(d, map_name)
+            matched = False
+            for ann in ann_obj['annotations']:
+                if re.search(query, ' | '.join([ann['str'], ann['pref'], ann['cui'], ann['sty']])):
+                    matched_docs.append(d)
+                    matched = True
+                    break
+            if not matched:
+                for ann in ann_obj['phenotypes']:
+                    if re.search(query, ' | '.join([ann['str'], ann['minor_type']])):
+                        matched_docs.append(d)
+                    break
+        return matched_docs
 
 
 class FileBasedDocAnn(DocAnn):
