@@ -318,18 +318,18 @@
                         qbb.inf.searchDocs($('#klsearch').val(), function (ss){
                             searchingFinish('found ' + ss.length + ' results');
                             renderDocTable(ss);
-                        });
+                        }, _passphrase);
                     else{
                         if (_curMapping){
                             qbb.inf.searchAnnsMapping($('#klsearch').val(), _curMapping, function (ss){
                                 searchingFinish('found ' + ss.length + ' results');
                                 renderDocTable(ss);
-                            });
+                            }, _passphrase);
                         }else
                             qbb.inf.searchAnns($('#klsearch').val(), function (ss){
                                 searchingFinish('found ' + ss.length + ' results');
                                 renderDocTable(ss);
-                            });
+                            }, _passphrase);
                     }
                 }else{
                     getAllDocIds();
