@@ -18,6 +18,10 @@ A lightweight annotation visualisation tool
    ```
    "passphrase": "123"
    ```
+   
+## web ui
+The browser based UI can then be accessed via http://SERVER_IP:8000/vis/. 
+
 ## RESTful API call
 You can get annotations by using API calls, for example.
 ### get document details: `/api/doc_detail/`
