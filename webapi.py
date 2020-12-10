@@ -4,6 +4,7 @@ import codecs
 import json
 import re
 import utils
+from multiprocessing import Manager
 
 
 def save_json_array(lst, file_path, encoding='utf-8'):
@@ -62,15 +63,15 @@ class DocAnn(object):
 
     def search_docs(self, query):
         query = '\\b%s\\b' % query
-        matched_docs = []
-        utils.multi_thread_tasking(self.get_doc_list(), 10, DocAnn.do_search_doc, args=[self, query, matched_docs])
-        return matched_docs
+        matched_docs = Manager().list()
+        utils.multi_process_tasking(self.get_doc_list(), DocAnn.do_search_doc, args=[self, query, matched_docs])
+        return list(matched_docs)
 
     def search_anns(self, query, map_name=None):
-        matched_docs = []
-        utils.multi_thread_tasking(self.get_doc_list(), 10, DocAnn.do_search_anns,
+        matched_docs = Manager().list()
+        utils.multi_process_tasking(self.get_doc_list(), DocAnn.do_search_anns,
                                    args=[self, query, map_name, matched_docs])
-        return matched_docs
+        return list(matched_docs)
 
     @staticmethod
     def do_search_doc(d, inst, query, container):
