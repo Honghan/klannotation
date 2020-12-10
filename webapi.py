@@ -76,7 +76,7 @@ class DocAnn(object):
     @staticmethod
     def do_search_doc(d, inst, query, container):
         content = inst.get_doc_content(d)
-        if re.search(query, content):
+        if re.search(query, content, re.IGNORECASE):
             container.append(d)
 
     @staticmethod
@@ -84,7 +84,7 @@ class DocAnn(object):
         ann_obj = inst.get_doc_ann(d) if map_name is None else inst.get_doc_ann_by_mapping(d, map_name)
         matched = False
         for ann in ann_obj['annotations']:
-            if re.search(query, ' | '.join([str(ann['str']), str(ann['pref']), ann['cui'], ann['sty']])):
+            if re.search(query, ' | '.join([str(ann['str']), str(ann['pref']), ann['cui'], ann['sty']]), re.IGNORECASE):
                 container.append(d)
                 matched = True
                 break

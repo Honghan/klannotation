@@ -3,6 +3,7 @@
     let _curMapping = null;
     let _needPassphrase = false;
     let _passphrase = null;
+    let _docTable = null;
 
     function checkPassphraseNecessary(){
         qbb.inf.needPassphrase(function (s){
@@ -16,6 +17,7 @@
     }
 
     function start(){
+        $('#klsearch').prop( "disabled", false );
         getAvailableMappings();
         getAllDocIds();
         toggleAnn();
@@ -54,23 +56,27 @@
         }, _passphrase);
     }
 
-    function getAllDocIds(){
-        qbb.inf.getDocList(function (docs){
-            let s = "";
-            for(let i=0; i<docs.length;i++){
-                s += "<tr><td><a id='" + docs[i].replaceAll(".", "_") + "' docId='" + docs[i] + "'>" + docs[i] + "</a></td></tr>";
-                if (i == 0){
-                    _curDoc = docs[i];
-                }
+    function renderDocTable(docs){
+        let s = "";
+        for(let i=0; i<docs.length;i++){
+            s += "<tr><td><a id='" + docs[i].replaceAll(".", "_") + "' docId='" + docs[i] + "'>" + docs[i] + "</a></td></tr>";
+            if (i == 0){
+                _curDoc = docs[i];
             }
-            $('.docList').html("<table id='docListTab' class=\"display\"><thead><tr><th>doc ids</th></tr></thead>" + s + "</table>");
-            $('.docList a').click(function (){
-                getDocDetail($(this).attr('docId'));
-            });
-            $('#docListTab').DataTable({
-                "order": [[ 0, "asc" ]]
-            });
-            getDocDetail(_curDoc);
+        }
+        $('.docList').html("<table id='docListTab' class=\"display\"><thead><tr><th>doc ids</th></tr></thead>" + s + "</table>");
+        $('.docList a').click(function (){
+            getDocDetail($(this).attr('docId'));
+        });
+        _docTable = $('#docListTab').DataTable();
+        getDocDetail(_curDoc);
+    }
+
+    function getAllDocIds(){
+        renderSearching();
+        qbb.inf.getDocList(function (docs){
+            searchingFinish('found ' + docs.length + ' results');
+            renderDocTable(docs);
         }, _passphrase);
     }
 
@@ -93,9 +99,19 @@
         showByLegend();
     }
 
-    function getDocDetail(docId){
+    function loading(docId){
         $('a.selected').removeClass('selected');
-        $('.docContent').html('loading ' + docId + '...')
+        if (docId)
+            $('.docContent').html('loading ' + docId + '...')
+        else {
+            $('.docContent').html('');
+            if (_docTable)
+                _docTable.clear().draw();
+        }
+    }
+
+    function getDocDetail(docId){
+        loading(docId);
         _curDoc = docId;
         $('#' + _curDoc.replaceAll(".", "_")).addClass('selected');
         if (_curMapping === null)
@@ -280,8 +296,47 @@
         });
     }
 
+    function renderSearching(){
+        loading();
+        $('.message').html('searching...');
+        $('.main').hide();
+    }
+
+    function searchingFinish(msg){
+        $('.message').html(msg);
+        $('.main').show();
+    }
+
     $(document).ready(function(){
         checkPassphraseNecessary();
+        $('#klsearch').keydown(function(event){
+            if (event.which === 13 ){
+                renderSearching();
+                if($('#klsearch').val().length > 0){
+                    const t = $('input[name=searchType]:checked').val();
+                    if (t === "docs")
+                        qbb.inf.searchDocs($('#klsearch').val(), function (ss){
+                            searchingFinish('found ' + ss.length + ' results');
+                            renderDocTable(ss);
+                        });
+                    else{
+                        if (_curMapping){
+                            qbb.inf.searchAnnsMapping($('#klsearch').val(), _curMapping, function (ss){
+                                searchingFinish('found ' + ss.length + ' results');
+                                renderDocTable(ss);
+                            });
+                        }else
+                            qbb.inf.searchAnns($('#klsearch').val(), function (ss){
+                                searchingFinish('found ' + ss.length + ' results');
+                                renderDocTable(ss);
+                            });
+                    }
+                }else{
+                    getAllDocIds();
+                }
+
+            }
+        });
     })
 
 })(this.jQuery)

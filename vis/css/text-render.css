@@ -133,3 +133,26 @@ mark.clear{
 .mappings span.selected{
     box-shadow: 3px 3px #888888;
 }
+
+.searchDiv{
+    text-align: center;
+    width: 90%;
+    padding: 20px;
+    background-color: #f1f1f1;
+}
+
+.mappings{
+    width: 50%;
+}
+
+#klsearch{
+    font-family: 'Josefin Sans', "Times New Roman";
+    font-size: 90%;
+    width: 50%;
+    line-height: 40px;
+}
+
+.message{
+    font-size: 90%;
+    color: #333333;
+}

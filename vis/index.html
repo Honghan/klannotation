@@ -13,6 +13,13 @@
 <script src="./js/vis.js"></script>
 <body>
 <div class="semehr">KLAnnotation | SemEHR</div>
+
+<div class="searchDiv">
+    Search <input type="radio" id="docType" name="searchType" value="docs"/> <label for="docType">Document contents</label> <input type="radio" id="annType" name="searchType" value="anns" checked/> <label for="annType">Annotation contents</label> <p/>
+    <input id="klsearch" disabled placeholder="search documents or annotations"/>
+    <div class="message"></div>
+</div>
+
 <div class="main">
     <div  id="leftPanel">
         <div class="title">Document List</div>

@@ -33,6 +33,21 @@ if (typeof qbb == "undefined"){
 				qbb.inf.callAPI(sendObject, searchCB, passphrase);
 			},
 
+			searchDocs: function(query, searchCB, passphrase){
+				var sendObject= ["search_docs", query];
+				qbb.inf.callAPI(sendObject, searchCB, passphrase);
+			},
+
+			searchAnns: function(query, searchCB, passphrase){
+				var sendObject= ["search_anns", query];
+				qbb.inf.callAPI(sendObject, searchCB, passphrase);
+			},
+
+			searchAnnsMapping: function(query, mapping, searchCB, passphrase){
+				var sendObject= ["search_anns_by_mapping", query, mapping];
+				qbb.inf.callAPI(sendObject, searchCB, passphrase);
+			},
+
 			getMappings: function(searchCB, passphrase){
 				var sendObject= ["mappings"];
 				qbb.inf.callAPI(sendObject, searchCB, passphrase);
