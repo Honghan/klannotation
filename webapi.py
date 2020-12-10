@@ -3,6 +3,7 @@ from os.path import isfile, join
 import codecs
 import json
 import re
+import utils
 
 
 def save_json_array(lst, file_path, encoding='utf-8'):
@@ -62,28 +63,35 @@ class DocAnn(object):
     def search_docs(self, query):
         query = '\\b%s\\b' % query
         matched_docs = []
-        for d in self.get_doc_list():
-            content = self.get_doc_content(d)
-            if re.search(query, content):
-                matched_docs.append(d)
+        utils.multi_thread_tasking(self.get_doc_list(), 10, DocAnn.do_search_doc, args=[self, query, matched_docs])
         return matched_docs
 
     def search_anns(self, query, map_name=None):
         matched_docs = []
-        for d in self.get_doc_list():
-            ann_obj = self.get_doc_ann(d) if map_name is None else self.get_doc_ann_by_mapping(d, map_name)
-            matched = False
-            for ann in ann_obj['annotations']:
-                if re.search(query, ' | '.join([str(ann['str']), str(ann['pref']), ann['cui'], ann['sty']])):
-                    matched_docs.append(d)
-                    matched = True
-                    break
-            if not matched:
-                for ann in ann_obj['phenotypes']:
-                    if re.search(query, ' | '.join([str(ann['str']), ann['minor_type']])):
-                        matched_docs.append(d)
-                    break
+        utils.multi_thread_tasking(self.get_doc_list(), 10, DocAnn.do_search_anns,
+                                   args=[self, query, map_name, matched_docs])
         return matched_docs
+
+    @staticmethod
+    def do_search_doc(d, inst, query, container):
+        content = inst.get_doc_content(d)
+        if re.search(query, content):
+            container.append(d)
+
+    @staticmethod
+    def do_search_anns(d, inst, query, map_name, container):
+        ann_obj = inst.get_doc_ann(d) if map_name is None else inst.get_doc_ann_by_mapping(d, map_name)
+        matched = False
+        for ann in ann_obj['annotations']:
+            if re.search(query, ' | '.join([str(ann['str']), str(ann['pref']), ann['cui'], ann['sty']])):
+                container.append(d)
+                matched = True
+                break
+        if not matched:
+            for ann in ann_obj['phenotypes']:
+                if re.search(query, ' | '.join([str(ann['str']), ann['minor_type']])):
+                    container.append(d)
+                break
 
 
 class FileBasedDocAnn(DocAnn):
