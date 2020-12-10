@@ -53,10 +53,13 @@ class APIMapper(object):
                         return {"anns": self._inst.get_doc_ann(m2.group(2)),
                                 "content": self._inst.get_doc_content(m2.group(2))}
                 raise Exception('doc id not found in [%s]' % api_call)
-            elif func in ['doc_content_mapping']:
+            elif func in ['doc_content_mapping', 'search_anns_by_mapping']:
                 m3 = re.search('/api/([^/]{1,255})/([^/]{1,255})/([^/]{1,255})/', api_call)
-                return {"content": self._inst.get_doc_content(m3.group(2)),
-                        "anns": self._inst.get_doc_ann_by_mapping(m3.group(2), unquote(m3.group(3)))}
+                if func == 'search_anns_by_mapping':
+                    return self._inst.search_anns(unquote(m3.group(2)), map_name=unquote(m3.group(3)))
+                else:
+                    return {"content": self._inst.get_doc_content(m3.group(2)),
+                            "anns": self._inst.get_doc_ann_by_mapping(m3.group(2), unquote(m3.group(3)))}
         raise Exception('path [%s] not valid' % api_call)
 
     @staticmethod
