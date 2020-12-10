@@ -74,13 +74,13 @@ class DocAnn(object):
             ann_obj = self.get_doc_ann(d) if map_name is None else self.get_doc_ann_by_mapping(d, map_name)
             matched = False
             for ann in ann_obj['annotations']:
-                if re.search(query, ' | '.join([ann['str'], ann['pref'], ann['cui'], ann['sty']])):
+                if re.search(query, ' | '.join([str(ann['str']), str(ann['pref']), ann['cui'], ann['sty']])):
                     matched_docs.append(d)
                     matched = True
                     break
             if not matched:
                 for ann in ann_obj['phenotypes']:
-                    if re.search(query, ' | '.join([ann['str'], ann['minor_type']])):
+                    if re.search(query, ' | '.join([str(ann['str']), ann['minor_type']])):
                         matched_docs.append(d)
                     break
         return matched_docs

@@ -45,7 +45,7 @@ class APIMapper(object):
                         return self._inst.get_doc_ann(m2.group(2))
                     elif func == 'check_phrase':
                         return self._passphrase == m2.group(2)
-                    elif func == 'search_doc':
+                    elif func == 'search_docs':
                         return self._inst.search_docs(unquote(m2.group(2)))
                     elif func == 'search_anns':
                         return self._inst.search_anns(unquote(m2.group(2)))
