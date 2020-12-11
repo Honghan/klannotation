@@ -20,9 +20,9 @@ A lightweight annotation visualisation tool
    ```
    
 ## web ui
-The browser based UI can then be accessed via http://SERVER_IP:8000/vis/. The screenshot below is a demo system run on discharge summaries from [MTSamples](https://www.mtsamples.com/).
+The browser based UI can then be accessed via http://SERVER_IP:8000/vis/. The screenshot below is from a demo system on discharge summaries from [MTSamples](https://www.mtsamples.com/).
 
-![](./klannotation-screenshot.png | width=200)
+<img src="./klannotation-screenshot.png" width="600px"/>
 
 ## RESTful API call
 You can get annotations by using API calls, for example.
