@@ -4,7 +4,7 @@
 
 The web UI screenshot below is from a demo klannotation instance on discharge summaries from [MTSamples](https://www.mtsamples.com/).
 
-<img src="https://raw.githubusercontent.com/Honghan/klannotation/master/klannotation-screenshot.png" style="width: 400px;"/>
+<img src="https://raw.githubusercontent.com/Honghan/klannotation/master/klannotation-screenshot.png" width="600px"/>
 
 ## run klannotation using `docker-compose`
 1. edit `klannotation-compose.yml`
