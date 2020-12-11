@@ -1,6 +1,10 @@
 # klannotation
 
-A lightweight annotation visualisation tool
+**A lightweight annotation visualisation tool**
+
+The web UI screenshot below is from a demo klannotation instance on discharge summaries from [MTSamples](https://www.mtsamples.com/).
+
+<img src="https://raw.githubusercontent.com/Honghan/klannotation/master/klannotation-screenshot.png" style="width: 800px;box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;"/>
 
 ## run klannotation using `docker-compose`
 1. edit `klannotation-compose.yml`
@@ -20,9 +24,7 @@ A lightweight annotation visualisation tool
    ```
    
 ## web ui
-The browser based UI can then be accessed via http://SERVER_IP:8000/vis/. The screenshot below is from a demo system on discharge summaries from [MTSamples](https://www.mtsamples.com/).
-
-<img src="./klannotation-screenshot.png" width="600px"/>
+The browser based UI can then be accessed via http://SERVER_IP:8000/vis/. 
 
 ## RESTful API call
 You can get annotations by using API calls, for example.
