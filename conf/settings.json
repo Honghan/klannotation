@@ -1,5 +1,6 @@
 {
   "mappings": [
-    {"name":  "HPO mapping", "file": "./mappings/hpo-umls-mapping.json"}
+    {"name":  "HPO mapping", "file": "./mappings/hpo-umls-mapping.json"},
+    {"name":  "Eye HPO mapping", "file": "./mappings/eye-hpo-umls-mapping.json"}
   ]
 }
