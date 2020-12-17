@@ -31,7 +31,7 @@ class DocAnn(object):
         pass
 
     def get_doc_ann(self, doc_id):
-        DocAnn.default_filtering(self.raw_doc_ann(doc_id))
+        return DocAnn.default_filtering(self.raw_doc_ann(doc_id))
 
     def raw_doc_ann(self, doc_id):
         pass
