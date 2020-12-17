@@ -31,6 +31,9 @@ class DocAnn(object):
         pass
 
     def get_doc_ann(self, doc_id):
+        DocAnn.default_filtering(self.raw_doc_ann(doc_id))
+
+    def raw_doc_ann(self, doc_id):
         pass
 
     def load_mappings(self, mappings):
@@ -74,6 +77,20 @@ class DocAnn(object):
         return list(matched_docs)
 
     @staticmethod
+    def default_filtering(doc_anns):
+        anns = doc_anns['annotations']
+        mapped = []
+        for ann in anns:
+            if len(ann['ruled_by']) > 0 and \
+                    ('not_mention_filters.json' in ann['ruled_by']
+                     or 'skip terms' in ann['ruled_by']):
+                pass
+            else:
+                mapped.append(ann)
+        doc_anns['annotations'] = mapped
+        return doc_anns
+
+    @staticmethod
     def do_search_doc(d, inst, query, container):
         content = inst.get_doc_content(d)
         if re.search(query, content, re.IGNORECASE):
@@ -111,7 +128,7 @@ class FileBasedDocAnn(DocAnn):
     def get_doc_content(self, doc_id):
         return FileBasedDocAnn.read_text_file(join(self._doc_folder, doc_id))
 
-    def get_doc_ann(self, doc_id, ptn='se_ann_%s.json'):
+    def raw_doc_ann(self, doc_id, ptn='se_ann_%s.json'):
         return FileBasedDocAnn.load_json(join(self._ann_folder, ptn % doc_id[:doc_id.rfind('.')]))
 
     @staticmethod

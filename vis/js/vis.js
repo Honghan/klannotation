@@ -48,8 +48,9 @@
                     $(".mappings span").removeClass("selected");
                     _curMapping = null;
                 }else{
+                    $(".mappings span").removeClass("selected");
                     _curMapping = $(this).attr("name");
-                    $(".mappings span").addClass("selected");
+                    $(this).addClass("selected");
                 }
                 getDocDetail(_curDoc);
             });
